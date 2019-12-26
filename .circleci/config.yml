@@ -26,9 +26,6 @@ jobs:
                 name: Linting
                 command: npm run lint
             - run:
-                name: Testing
-                command: npm run test-prod
-            - run:
                 name: Building
                 command: npm run build-prod
             - save_cache:
@@ -38,6 +35,19 @@ jobs:
                     - package.json
                     - firebase.json
                     - .firebaserc
+    test:
+      docker:
+        - image: circleci/node:13.5.0-browsers
+      working_directory: ~/project
+      steps:
+        - run:
+            name: Show current branch
+            command: echo ${CIRCLE_BRANCH}
+        - restore_cache:
+            key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+        - run:
+            name: Testing
+            command: npm run test-prod
     deploy:
         docker:
             - image: circleci/node:13.5.0-browsers
