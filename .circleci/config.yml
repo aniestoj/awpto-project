@@ -40,11 +40,23 @@ jobs:
         - image: circleci/node:13.5.0-browsers
       working_directory: ~/project
       steps:
+        - checkout
         - run:
             name: Show current branch
             command: echo ${CIRCLE_BRANCH}
+        - run:
+            name: Show current directory
+            command: pwd
         - restore_cache:
-            key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+            keys:
+              - v1-dependencies-{{ checksum "package.json" }}
+        - run:
+            name: Install dependencies
+            command: npm install
+        - save_cache:
+            key: v1-dependencies-{{ checksum "package.json" }}
+            paths:
+              - node_modules
         - run:
             name: Testing
             command: npm run test-prod
