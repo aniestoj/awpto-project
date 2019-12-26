@@ -1,35 +1,48 @@
-import { TestBed, async } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+import { Item } from './models/item';
 
 describe('AppComponent', () => {
+
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
       declarations: [
         AppComponent
       ],
+      imports: [
+        FormsModule
+      ]
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.debugElement.componentInstance;
   }));
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
-  it(`should have as title 'awpto-projekt'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('awpto-projekt');
+  it('should call the add method and return an array with values', () => {
+    component.addItem('created item');
+    expect(component.items.length).toBe(1);
   });
 
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to awpto-projekt!');
+  it('should call add an item when onSubmit is called', () => {
+    component.createItem = 'created item';
+    component.onSubmit();
+    expect(component.items.length).toBe(1);
+  });
+
+  it('should call delete items when deleteItem is called', () => {
+    const mockItem = new Item();
+    mockItem.id = '1';
+    mockItem.name = 'created item';
+    component.items.push(mockItem);
+    component.deleteItem(mockItem);
+    expect(component.items.length).toBe(0);
   });
 });
