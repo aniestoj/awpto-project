@@ -1,10 +1,16 @@
 {
   "hosting": {
-    "public": "dist/to-do-list",
+    "public": "dist/awpto-projekt",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
